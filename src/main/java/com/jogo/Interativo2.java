@@ -12,59 +12,29 @@ public class Interativo2 extends JFrame {
     private int px;
     private int py;
     private boolean jogando = true;
+  
     private final int FPS = 1000 / 20;
+    private boolean[] controleTecla = new boolean[4]; 
 
-    public void inicia() {
-        long prxAtualizacao = 0;
-        while (jogando) {
-            if (System.currentTimeMillis() >= prxAtualizacao) {
-                tela.repaint();
-                prxAtualizacao = System.currentTimeMillis() + FPS;
-            }
-        }
-    }
 
-    public Interativo() {
+    public Interativo2() {
         super.addKeyListener(new KeyListener() {
             @Override
             // evento para cada tecla apertada
             public void keyTyped(KeyEvent e) {
-
+                
             }
-
             @Override
             // evento para cada tecla liberada
             public void keyReleased(KeyEvent e) {
-
+                setaTecla(e.getKeyCode(), false);
             }
 
             @Override
             // evento para cada tecla pressionada
             public void keyPressed(KeyEvent e) {
-                int tecla = e.getKeyCode();
-                switch (tecla) {
-                    case KeyEvent.VK_ESCAPE:
-                        // tecla esc
-                        jogando = false;
-                        dispose();
-                        break;
-                    case KeyEvent.VK_UP:
-                        // seta pra cima
-                        py--;
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        // seta pra baixo
-                        py++;
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        // seta pra esquerda
-                        px--;
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        // seta pra direita
-                        px++;
-                        break;
-                }
+                setaTecla(e.getKeyCode(), true);
+                
             }
 
         });
@@ -92,8 +62,60 @@ public class Interativo2 extends JFrame {
         
     }
 
+    public void inicia() {
+        long prxAtualizacao = 0;
+        while (jogando) {
+            if (System.currentTimeMillis() >= prxAtualizacao) {
+                atualizaJogo();
+                tela.repaint();
+                prxAtualizacao = System.currentTimeMillis() + FPS;
+            }
+        }
+    }
+    private void atualizaJogo() {
+            if (controleTecla[0]) 
+                py--; //vai pra cima
+             else if (controleTecla[1]) 
+                py++; // vai pra baixo
+             if (controleTecla[2]) 
+                px--; //vai pra esquerda               
+             else if (controleTecla[3]) 
+                px++;  // vai pra direita
+    }
+
+    private void setaTecla(int tecla, boolean pressionada) {
+        switch (tecla) {
+            case KeyEvent.VK_ESCAPE:
+                // tecla esc
+                jogando = false;
+                dispose();
+                break;
+            case KeyEvent.VK_UP:
+                // seta pra cima
+                controleTecla[0] = pressionada;
+               
+                break;
+            case KeyEvent.VK_DOWN:
+                // seta pra baixo
+                controleTecla[1] = pressionada;
+               
+                break;
+            case KeyEvent.VK_LEFT:
+                // seta pra esquerda
+                controleTecla[2] = pressionada;
+               
+                break;
+            case KeyEvent.VK_RIGHT:
+                // seta pra direita
+                controleTecla[3] = pressionada;
+               
+                break;
+        }
+    }  
+
+
     public static void main(String[] args) {
-        Interativo jogo = new Interativo();
+        Interativo2 jogo = new Interativo2();
         jogo.inicia();
     }
 
