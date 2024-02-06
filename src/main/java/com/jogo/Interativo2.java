@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Interativo extends JFrame {
+public class Interativo2 extends JFrame {
     private JPanel tela;
     private int px;
     private int py;
