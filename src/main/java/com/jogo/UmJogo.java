@@ -119,5 +119,22 @@ public class UmJogo extends JFrame {
         }
     }
 
+    private void atualizaJogo() {
+        if (fimDeJogo) 
+            return;
+        
+        if (controleTecla[2]) 
+        jogador.x -= jogador.velocidade;
+            else if (controleTecla[3]) 
+                jogador.x += jogador.velocidade;
+        if (jogador.x < 0)     
+        jogador.x = tela.getWidth() - jogador.largura;
+        if (jogador.x + jogador.largura > tela.getWidth())     
+        jogador.x = 0;
+
+        tiro.y = 0;
+        tiro.x = jogador.x + jogador.largura/2;
+
+    }
 
 }
