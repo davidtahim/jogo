@@ -4,27 +4,33 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 public class UmJogo extends JFrame {
-    private final int FPS = 1000/20;
+    private final int FPS = 1000 / 20;
+
     /**
      * Elemento
      */
     public class Elemento {
-        public int x,y,largura,altura;
+        public int x, y, largura, altura;
         public float velocidade;
 
-        public Elemento (int x, int y, int width, int height) {
+        public Elemento(int x, int y, int width, int height) {
             this.x = x;
             this.y = y;
             this.largura = width;
             this.altura = height;
         }
-        
+
     }
 
     private JPanel tela;
     private boolean jogando = true;
-    private boolean fimDeJogo=false;
+    private boolean fimDeJogo = false;
 
     private Elemento tiro;
     private Elemento jogador;
@@ -37,6 +43,81 @@ public class UmJogo extends JFrame {
 
     private boolean[] controleTecla = new boolean[4];
 
-    
+    public UmJogo() {
+        this.addKeyListener(new KeyListener() {
+            @Override
+            // evento para cada tecla apertada
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            // evento para cada tecla liberada
+            public void keyReleased(KeyEvent e) {
+                setaTecla(e.getKeyCode(), false);
+            }
+
+            @Override
+            // evento para cada tecla pressionada
+            public void keyPressed(KeyEvent e) {
+                setaTecla(e.getKeyCode(), true);
+
+            }
+        });
+
+        tiro = new Elemento(0, 0, 1, 0);
+        jogador = new Elemento(0, 0, larg, larg);
+        jogador.velocidade = 5;
+
+        blocos = new Elemento[5];
+
+        for (int i = 0; i < blocos.length; i++) {
+            int espaco = i * larg + 10 * (i + 1);
+            blocos[i] = new Elemento(espaco, 0, larg, larg);
+            blocos[i].velocidade = 1;
+        }
+        tela = new JPanel() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void paintComponent(Graphics g) {
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, tela.getWidth(), tela.getHeight());
+                g.setColor(Color.RED);
+                g.fillRect(tiro.x, tiro.y, tiro.largura, tela.getHeight());
+                g.setColor(Color.GREEN);
+                g.fillRect(jogador.x, jogador.y, jogador.largura, jogador.altura);
+                g.setColor(Color.BLUE);
+                for (Elemento bloco : blocos) {
+                    g.fillRect(bloco.x, bloco.y, bloco.largura, bloco.altura);
+                }
+
+                g.setColor(Color.GRAY);
+                g.drawLine(0, linhaLimite, tela.getWidth(), linhaLimite);
+                g.drawString("Pontos: " + pontos, 0, 10);
+            }
+        };
+
+        getContentPane().add(tela);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(640, 480);
+        setVisible(true);
+        setResizable(false);
+        jogador.x = tela.getWidth()/2 - jogador.x/2; 
+        jogador.y = tela.getHeight()/2 - jogador.altura;
+        tiro.altura = tela.getHeight()-jogador.altura;    
+    }
+
+    public void inicia() {
+        long prxAtualizacao = 0;
+        while (jogando) {
+            if (System.currentTimeMillis() >= prxAtualizacao) {
+                atualizaJogo();
+                tela.repaint();
+                prxAtualizacao = System.currentTimeMillis() + FPS;
+            }
+        }
+    }
+
 
 }
