@@ -103,8 +103,8 @@ public class UmJogo extends JFrame {
         setSize(640, 480);
         setVisible(true);
         setResizable(false);
-        jogador.x = tela.getWidth()/2 - jogador.x/2; 
-        jogador.y = tela.getHeight()/2 - jogador.altura;
+        jogador.x = tela.getWidth()/2 - jogador.largura/2; 
+        jogador.y = tela.getHeight() - jogador.altura;
         tiro.altura = tela.getHeight()-jogador.altura;    
     }
 
@@ -134,7 +134,74 @@ public class UmJogo extends JFrame {
 
         tiro.y = 0;
         tiro.x = jogador.x + jogador.largura/2;
+        
+        for (Elemento bloco : blocos) {
+
+            if (bloco.y > linhaLimite) {
+                fimDeJogo = true;
+                break;
+            }
+            if (colide(bloco,tiro) && bloco.y > 0) {
+                bloco.y -= bloco.velocidade*2;
+                tiro.y = bloco.y;
+
+            } else {
+                int sorte = r.nextInt(10);
+
+                if (sorte ==0) 
+                    bloco.y+= bloco.velocidade+1;
+                else if (sorte==5)
+                bloco.y -= bloco.velocidade;
+                else 
+                bloco.y += bloco.velocidade;
+            }
+            pontos = pontos+ blocos.length;    
+        }
+
+        }
+
+        private boolean colide(Elemento a, Elemento b) {
+            if (a.x + a.largura >= b.x && a.x <= b.x + b.largura) {
+                return true;                
+            }
+                return false;
+        }
+
+        private void setaTecla(int tecla, boolean pressionada) {
+            switch (tecla) {
+                case KeyEvent.VK_ESCAPE:
+                    // tecla esc
+                    jogando = false;
+                    dispose();
+                    break;
+                case KeyEvent.VK_UP:
+                    // seta pra cima
+                    controleTecla[0] = pressionada;
+                   
+                    break;
+                case KeyEvent.VK_DOWN:
+                    // seta pra baixo
+                    controleTecla[1] = pressionada;
+                   
+                    break;
+                case KeyEvent.VK_LEFT:
+                    // seta pra esquerda
+                    controleTecla[2] = pressionada;
+                   
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    // seta pra direita
+                    controleTecla[3] = pressionada;
+                   
+                    break;
+            }
+        } 
+        
+        public static void main(String[] args) {
+            UmJogo jogo = new UmJogo();
+            jogo.inicia();
+        }
 
     }
 
-}
+
